@@ -9,7 +9,7 @@ const {
   updateUser,
   updateRole,
   updatePassword,
-} = require("../modules/users_query");
+} = require("../modules/queries/users_query");
 const JWT_SECRET = process.env.JWT_SECRET;
 const con = require("../models/connection");
 
