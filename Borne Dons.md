@@ -81,8 +81,6 @@ Page de validation de la banque
 
 - Available Prices (id, amount, isavailable)
 
-master conflict
-
 # Section Projet
 
 - Autant de section que voulu
