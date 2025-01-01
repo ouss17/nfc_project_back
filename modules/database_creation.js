@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS paiementsHistoric (
   firstname varchar(100) NOT NULL,
   lastname varchar(100) DEFAULT NULL,
   email varchar(150) DEFAULT NULL,
+  creation_timestamp datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
