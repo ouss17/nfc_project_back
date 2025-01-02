@@ -212,7 +212,7 @@ exports.modifyUser = async (req, res) => {
         try {
           const updateQuery = await updateUser(
             con,
-            [lastname, firstname, currentId],
+            [firstname, lastname, currentId],
             currentPseudo,
             pseudo
           );
@@ -259,7 +259,7 @@ exports.modifyUser = async (req, res) => {
         try {
           const updateQuery = await updateUser(
             con,
-            [pseudo, lastname, firstname, currentId],
+            [pseudo, firstname, lastname, currentId],
             currentPseudo,
             pseudo
           );
@@ -489,15 +489,24 @@ exports.removeUser = async (req, res) => {
       const userRes = user[0];
       if (role == "admin" || id == userRes.id) {
         try {
-          const deleteQuery = await deleteUser(con, id);
+          const deleteQuery = await deleteUser(con, req.params.userId);
           if (deleteQuery.affectedRows === 1) {
-            res
-              .clearCookie("jwt")
-              .json({
-                result: true,
-                response: "Utilisateur supprimé",
-              })
-              .end();
+            if (id === req.params.userId) {
+              res
+                .clearCookie("jwt")
+                .json({
+                  result: true,
+                  response: "Utilisateur supprimé",
+                })
+                .end();
+            } else {
+              res
+                .json({
+                  result: true,
+                  response: "Utilisateur supprimé",
+                })
+                .end();
+            }
           }
         } catch (error) {
           console.error("Error during delete:", error);
