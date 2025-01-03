@@ -112,7 +112,7 @@ exports.removePrice = async (req, res) => {
   } else {
     res.status(400).json({
       result: false,
-      error: "Vous n'avez pas les droits pour surrpimer un tarif !",
+      error: "Vous n'avez pas les droits pour supprimer un tarif !",
     });
   }
 };
