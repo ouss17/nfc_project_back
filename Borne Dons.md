@@ -18,7 +18,11 @@
 
   
 
+  
+
 @media (min-width: 600px) and (max-width: 960px) { /* Styles pour tablettes */ }
+
+  
 
   
 
@@ -33,6 +37,7 @@
 #### User Story
 
 - Page de veille qui s'active au bout de 5 d'inactivité
+
 - Click sur la page de veille => accueil
 
 ---
@@ -40,21 +45,29 @@
 ##### Accueil
 
 - logo
+
 - date ar/fr
+
 - heure
+
 - 2 boutons =
- 	- Faire un don
- 	- découvrir Projet
+
+    - Faire un don
+
+    - découvrir Projet
 
 ##### Dons
 
 - bouton retour
+
 - Sélection des montants
- 	- **Montants en bdd & visible + Autre montant**
+
+    - **Montants en bdd & visible + Autre montant**
 
 Autre page pour passer la carte de paiement + champs
+
 Page de validation de la banque
-  
+
 ## Back
 
 1. Nodejs/express
@@ -62,6 +75,136 @@ Page de validation de la banque
 2. php
 
 3. django
+
+---
+
+### Routes/Endpoints
+
+#### Users
+
+- GET
+
+```js
+//GET USER INFO
+"http://localhost:3003/users/getMe" 
+```
+
+- GET
+
+```js
+//LOGOUT
+"http://localhost:3003/users/logout" 
+```
+
+- POST
+
+```js
+//ADD USER
+"http://localhost:3003/users/signup" 
+```
+
+- POST
+
+```js
+//LOG IN
+"http://localhost:3003/users/signin" 
+```
+
+- PUT
+
+```js
+//UPDATE USER BY ID
+"http://localhost:3003/users/updateUser/:userId" 
+```
+
+- PUT
+
+```js
+//UPDATE USER PASSWORD
+"http://localhost:3003/users/updatePassword/:userId" 
+```
+
+- PUT
+
+```js
+//UPDATE USER ROLE
+"http://localhost:3003/users/updateRole/:userId" 
+```
+
+- DELETE
+
+```js
+//DELETE USER BY ID
+"http://localhost:3003/users/deleteUser/:userId" 
+```
+
+#### Historic
+
+- GET
+
+```js
+//GET ALL HISTORIC
+"http://localhost:3003/historic" 
+```
+
+- GET
+
+```js
+//GET ALL HISTORIC BY USER FIRTSNAME AND LASTNAME
+"http://localhost:3003/historic/user/:firstname/:lastname" 
+```
+
+- GET
+
+```js
+//GET ONE HISTORIC BY ID
+"http://localhost:3003/historic/:idHistoric" 
+```
+
+- POST
+
+```js
+//ADD ONE HISTORIC
+"http://localhost:3003/historic" 
+```
+
+#### Price
+
+- GET
+
+```js
+//GET ALL PRICES
+"http://localhost:3003/price" 
+```
+
+- GET
+
+```js
+//GET AVAILABLE PRICES
+"http://localhost:3003/price/available" 
+```
+
+- POST
+
+```js
+//ADD PRICE
+"http://localhost:3003/price" 
+```
+
+- PUT
+
+```js
+//UPDATE HISTORIC
+"http://localhost:3003/update/:priceId" 
+```
+
+- DELETE
+
+```js
+//DELETE PRICE
+"http://localhost:3003/delete/:priceId" 
+```
+
 
 ## Base de données
 
@@ -90,4 +233,5 @@ Page de validation de la banque
 # Liens
 
 [Lien backend](https://github.com/ouss17/nfc_project_back)
+
 [Lien frontend](https://github.com/am2408/nfc_project_front)

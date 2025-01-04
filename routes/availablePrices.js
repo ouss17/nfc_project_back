@@ -12,7 +12,7 @@ var router = express.Router();
 router.post("/", auth, addPrice);
 router.get("/", retrievePrices);
 router.get("/available", retrieveAvailablePrices);
-router.put("/price/:priceId", auth, modifyPrice);
-router.delete("/price/:priceId", auth, removePrice);
+router.put("/update/:priceId", auth, modifyPrice);
+router.delete("/delete/:priceId", auth, removePrice);
 
 module.exports = router;
