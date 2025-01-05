@@ -174,35 +174,35 @@ Page de validation de la banque
 
 ```js
 //GET ALL PRICES
-"http://localhost:3003/price" 
+"http://localhost:3003/prices" 
 ```
 
 - GET
 
 ```js
 //GET AVAILABLE PRICES
-"http://localhost:3003/price/available" 
+"http://localhost:3003/prices/available" 
 ```
 
 - POST
 
 ```js
 //ADD PRICE
-"http://localhost:3003/price" 
+"http://localhost:3003/prices" 
 ```
 
 - PUT
 
 ```js
 //UPDATE HISTORIC
-"http://localhost:3003/update/:priceId" 
+"http://localhost:3003/prices/update/:priceId" 
 ```
 
 - DELETE
 
 ```js
 //DELETE PRICE
-"http://localhost:3003/delete/:priceId" 
+"http://localhost:3003/prices/delete/:priceId" 
 ```
 
 
@@ -235,3 +235,22 @@ Page de validation de la banque
 [Lien backend](https://github.com/ouss17/nfc_project_back)
 
 [Lien frontend](https://github.com/am2408/nfc_project_front)
+
+
+# Review 1
+
+- Ajout des tables
+    - Config
+    - Mosquee
+
+- Page Home => directement interface Dons + petite section quelque part pour voir les projets
+
+- Voir possibilité de ne pas mettre firstname & lastname mais essayer de garder un élément pour find débiteur
+
+- Virer champs de carte et garder que le nfc et mettre un petit bouton "Je n'ai pas le sans contact"
+
+- Mode jumua (non mvp)
+
+- Possiblement enlever écran de veille
+
+- Responsive sur Grands écrans surtout mais aussi sur tél
