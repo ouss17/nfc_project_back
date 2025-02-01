@@ -19,7 +19,6 @@ router.post('/create-token', async (req, res) => {
   }
 });
 
-
 // Route pour traiter une demande de paiement avec un token
 router.post('/process-nfc', async (req, res) => {
   try {
@@ -41,12 +40,27 @@ router.post('/process-nfc', async (req, res) => {
           token: nfcData, // Utilisez un token valide, ex : 'tok_visa'
         },
       },
+      confirm: true, // Confirmer automatiquement le paiement
+      automatic_payment_methods: {
+        enabled: true,
+        allow_redirects: 'never'
+      }
     });
 
-    res.json({
-      success: true,
-      paymentIntent, // Retourne l'objet PaymentIntent
-    });
+    // Vérifier le statut du paiement
+    if (paymentIntent.status === 'succeeded') {
+      res.json({
+        success: true,
+        paymentIntent,
+        message: 'Paiement effectué avec succès'
+      });
+    } else {
+      res.json({
+        success: false,
+        paymentIntent,
+        message: `Statut du paiement: ${paymentIntent.status}`
+      });
+    }
   } catch (error) {
     console.error('Erreur Stripe:', error.message);
     res.status(500).json({
