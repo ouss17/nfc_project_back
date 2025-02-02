@@ -13,9 +13,14 @@ var priceRouter = require("./routes/availablePrices");
 var stripesRouter = require("./routes/stripe");
 
 var app = express();
+const cors = require("cors");
 
 // allow cors for all url
-app.use(cors({ origin: "*" }));
+app.use(cors({ 
+    origin: "*",
+    credentials: true,
+    exposedHeaders: ["set-cookie"],
+}));
 
 
 app.use(logger("dev"));
