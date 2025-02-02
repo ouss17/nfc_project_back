@@ -2,6 +2,10 @@ const express = require('express');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); // Remplacez par votre clé secrète Stripe
 const router = express.Router();
 
+router.get('/', (req, res) => {
+  res.json('API Stripe pour paiements NFC');
+});
+
 // Route pour générer un token de test
 router.post('/create-token', async (req, res) => {
   try {
