@@ -14,6 +14,12 @@ var stripeRouter = require("./routes/stripe");
 
 var app = express();
 
+app.use(cors());
+
+// allow cors for all url
+app.use(cors({ origin: "*" }));
+
+
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
