@@ -14,8 +14,6 @@ var indexRouter = require("./routes/index");
 
 var app = express();
 
-app.use(cors());
-
 // allow cors for all url
 app.use(cors({ origin: "*" }));
 
