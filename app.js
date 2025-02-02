@@ -7,10 +7,10 @@ require("dotenv").config();
 require("./models/connection");
 
 var indexRouter = require("./routes/index");
-// var usersRouter = require("./routes/users");
-// var historicRouter = require("./routes/paiementsHistoric");
-// var priceRouter = require("./routes/availablePrices");
-// var stripeRouter = require("./routes/stripe");
+var usersRouter = require("./routes/users");
+var historicRouter = require("./routes/paiementsHistoric");
+var priceRouter = require("./routes/availablePrices");
+var stripesRouter = require("./routes/stripe");
 
 var app = express();
 
@@ -25,9 +25,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
-// app.use("/users", usersRouter);
-// app.use("/historic", historicRouter);
-// app.use("/prices", priceRouter);
-// app.use("/stripe", stripeRouter);
+app.use("/users", usersRouter);
+app.use("/historic", historicRouter);
+app.use("/prices", priceRouter);
+app.use("/stripe", stripesRouter);
 
 module.exports = app;
