@@ -74,6 +74,47 @@ router.post('/process-nfc', async (req, res) => {
   }
 });
 
+router.post('/process-nfc2', async (req, res) => {
+  try {
+    const { paymentMethodId, amount, currency, description } = req.body;
+
+    // Validation des données envoyées
+    if (!paymentMethodId || !amount || !currency) {
+      return res.status(400).json({ success: false, error: 'Données manquantes' });
+    }
+
+    // Créez une intention de paiement avec le PaymentMethod
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amount, // Montant en centimes (ex : 50000 pour 500,00 €)
+      currency: currency,
+      description: description || 'Paiement via NFC',
+      payment_method: paymentMethodId, // Utilisez un PaymentMethodId valide
+      confirm: true, // Confirmer automatiquement le paiement
+    });
+
+    // Vérifier le statut du paiement
+    if (paymentIntent.status === 'succeeded') {
+      res.json({
+        success: true,
+        paymentIntent,
+        message: 'Paiement effectué avec succès',
+      });
+    } else {
+      res.json({
+        success: false,
+        paymentIntent,
+        message: `Statut du paiement: ${paymentIntent.status}`,
+      });
+    }
+  } catch (error) {
+    console.error('Erreur Stripe:', error.message);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+});
+
 
 router.post('/create-payment-intent', async (req, res) => {
   const { amount, currency, payment_method } = req.body;
