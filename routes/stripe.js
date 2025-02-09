@@ -24,7 +24,7 @@ router.post('/create-token', async (req, res) => {
 });
 
 // Route pour traiter une demande de paiement avec un token
-router.post('/process-nfc', async (req, res) => {
+router.post('/process-nfc-important', async (req, res) => {
   try {
     const { nfcData, amount, currency, description } = req.body;
 
@@ -74,7 +74,7 @@ router.post('/process-nfc', async (req, res) => {
   }
 });
 
-router.post('/process-nfc2', async (req, res) => {
+router.post('/process-nfc', async (req, res) => {
   try {
     const { paymentMethodId, amount, currency, description } = req.body;
 
