@@ -127,6 +127,17 @@ router.post('/create-payment-intent', async (req, res) => {
       payment_method_types: ['card','card_present'], // For NFC transactions
       payment_method : "pm_card_visa",
       capture_method: 'automatic',
+      payment_method_data: {
+        type: 'card',
+        card: {
+          token: tok_visa, // Utilisez un token valide, ex : 'tok_visa'
+        },
+      },
+      confirm: true, // Confirmer automatiquement le paiement
+      automatic_payment_methods: {
+        enabled: true,
+        allow_redirects: 'never'
+      }
     });
 
     res.status(200).send({
