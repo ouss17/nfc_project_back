@@ -125,6 +125,7 @@ router.post('/create-payment-intent', async (req, res) => {
       amount,
       currency,
       payment_method_types: ['card_present'], // For NFC transactions
+      capture_method: 'automatic',
     });
 
     res.status(200).send({
