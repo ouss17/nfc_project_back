@@ -124,7 +124,8 @@ router.post('/create-payment-intent', async (req, res) => {
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency,
-      payment_method_types: ['card_present'], // For NFC transactions
+      payment_method_types: ['card','card_present'], // For NFC transactions
+      payment_method : "pm_card_visa",
       capture_method: 'automatic',
     });
 
