@@ -1,7 +1,7 @@
 const createUser = (con, values) => {
   return new Promise((resolve, reject) => {
     let query = `
-    INSERT INTO users 
+    INSERT INTO utilisateurs 
     (pseudo, email, password, firstname, lastname) 
     VALUES (?);
     `;
@@ -18,7 +18,7 @@ const getUserByPseudoOrEmail = (con, values) => {
   return new Promise((resolve, reject) => {
     let query = `
     SELECT *
-    FROM users 
+    FROM utilisateurs 
     WHERE email = ? OR pseudo = ?;
     `;
 
@@ -34,7 +34,7 @@ const deleteUser = (con, values) => {
   return new Promise((resolve, reject) => {
     let query = `
     DELETE
-    FROM users 
+    FROM utilisateurs 
     WHERE id = ?;
     `;
 
@@ -52,7 +52,7 @@ const updateUser = (con, values, currentPseudo, pseudo) => {
     switch (true) {
       case currentPseudo == pseudo:
         query = `
-    UPDATE users 
+    UPDATE utilisateurs 
     SET firstname = ?, lastname = ?
     WHERE id = ?;
     `;
@@ -60,7 +60,7 @@ const updateUser = (con, values, currentPseudo, pseudo) => {
 
       default:
         query = `
-        UPDATE users 
+        UPDATE utilisateurs 
         SET pseudo = ?, firstname = ?, lastname = ?
         WHERE id = ?;
         `;
@@ -78,7 +78,7 @@ const updateUser = (con, values, currentPseudo, pseudo) => {
 const updateRole = (con, values) => {
   return new Promise((resolve, reject) => {
     let query = `
-    UPDATE users 
+    UPDATE utilisateurs 
     SET role = ?
     WHERE id = ?;
     `;
@@ -94,7 +94,7 @@ const updateRole = (con, values) => {
 const updatePassword = (con, values) => {
   return new Promise((resolve, reject) => {
     let query = `
-    UPDATE users 
+    UPDATE utilisateurs 
     SET password = ?
     WHERE id = ?;
     `;
