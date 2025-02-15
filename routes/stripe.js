@@ -117,38 +117,50 @@ router.post('/process-nfc2', async (req, res) => {
 
 
 router.post('/create-payment-intent', async (req, res) => {
-  const { amount, currency, payment_method } = req.body;
-
   try {
-    // create payment intent with amount, currency, and payment method
+    const { amount, currency } = req.body;
+
+    // Create a PaymentIntent
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency,
-      payment_method_types: ['card','card_present'], // For NFC transactions
-      payment_method : "pm_card_visa",
+      payment_method_types: ['card'],
       capture_method: 'automatic',
-      payment_method_data: {
-        type: 'card',
-        card: {
-          token: tok_visa, // Utilisez un token valide, ex : 'tok_visa'
-        },
-      },
-      confirm: true, // Confirmer automatiquement le paiement
       automatic_payment_methods: {
         enabled: true,
         allow_redirects: 'never'
       }
     });
 
-    res.status(200).send({
+    // Return the client secret
+    res.status(200).json({
       clientSecret: paymentIntent.client_secret,
     });
   } catch (error) {
-    res.status(400).send({
+    console.error('Error creating payment intent:', error);
+    res.status(400).json({
       error: error.message,
     });
   }
 });
 
+// Add endpoint to retrieve payment status
+router.get('/payment-status/:paymentIntentId', async (req, res) => {
+  try {
+    const { paymentIntentId } = req.params;
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+    
+    res.status(200).json({
+      status: paymentIntent.status,
+      amount: paymentIntent.amount,
+      currency: paymentIntent.currency,
+    });
+  } catch (error) {
+    console.error('Error retrieving payment status:', error);
+    res.status(400).json({
+      error: error.message,
+    });
+  }
+});
 
 module.exports = router;
