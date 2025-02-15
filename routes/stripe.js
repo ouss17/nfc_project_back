@@ -26,50 +26,54 @@ router.post('/create-token', async (req, res) => {
 // Route pour traiter une demande de paiement avec un token
 router.post('/process-nfc', async (req, res) => {
   try {
-    const { nfcData, amount, currency, description } = req.body;
+    const { cardData, amount, currency, description } = req.body;
 
-    // Validation des données envoyées
-    if (!nfcData || !amount || !currency) {
-      return res.status(400).json({ success: false, error: 'Données manquantes' });
+    if (!cardData || !amount || !currency) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Missing required payment data' 
+      });
     }
 
-    // Créez une intention de paiement avec le token
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount, // Montant en centimes (par exemple, 50000 pour 500,00 €)
-      currency: currency,
-      description: description || 'Paiement via NFC',
-      payment_method_data: {
-        type: 'card',
-        card: {
-          token: nfcData, // Utilisez un token valide, ex : 'tok_visa'
-        },
-      },
-      confirm: true, // Confirmer automatiquement le paiement
-      automatic_payment_methods: {
-        enabled: true,
-        allow_redirects: 'never'
+    // Create a payment method from the EMV data
+    const paymentMethod = await stripe.paymentMethods.create({
+      type: 'card_present',
+      card_present: {
+        emv_data: cardData
       }
     });
 
-    // Vérifier le statut du paiement
-    if (paymentIntent.status === 'succeeded') {
+    // Create and confirm the payment intent
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount,
+      currency,
+      description,
+      payment_method: paymentMethod.id,
+      payment_method_types: ['card_present'],
+      capture_method: 'manual',
+      confirm: true
+    });
+
+    // Handle the payment result
+    if (paymentIntent.status === 'requires_capture') {
+      // Capture the payment
+      const capturedPayment = await stripe.paymentIntents.capture(
+        paymentIntent.id
+      );
+      
       res.json({
         success: true,
-        paymentIntent,
-        message: 'Paiement effectué avec succès'
+        paymentIntent: capturedPayment,
+        message: 'Payment captured successfully'
       });
     } else {
-      res.json({
-        success: false,
-        paymentIntent,
-        message: `Statut du paiement: ${paymentIntent.status}`
-      });
+      throw new Error(`Unexpected payment status: ${paymentIntent.status}`);
     }
   } catch (error) {
-    console.error('Erreur Stripe:', error.message);
+    console.error('Payment processing error:', error);
     res.status(500).json({
       success: false,
-      error: error.message,
+      error: error.message
     });
   }
 });
@@ -118,24 +122,54 @@ router.post('/process-nfc2', async (req, res) => {
 
 router.post('/create-payment-intent', async (req, res) => {
   try {
-    const { amount, currency } = req.body;
+    const { cardData, amount, currency, description } = req.body;
 
+    if (!cardData || !amount || !currency) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Missing required payment data' 
+      });
+    }
+
+    // Create a payment method from the EMV data
+    const paymentMethod = await stripe.paymentMethods.create({
+      type: 'card_present',
+      card_present: {
+        emv_data: cardData
+      }
+    });
+
+    // Create and confirm the payment intent
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency,
-      payment_method_types: ['card'],
-      capture_method: 'manual', // Changed to manual capture
-      confirm: false,
+      description,
+      payment_method: paymentMethod.id,
+      payment_method_types: ['card_present'],
+      capture_method: 'manual',
+      confirm: true
     });
 
-    res.status(200).json({
-      clientSecret: paymentIntent.client_secret,
-      paymentIntentId: paymentIntent.id,
-    });
+    // Handle the payment result
+    if (paymentIntent.status === 'requires_capture') {
+      // Capture the payment
+      const capturedPayment = await stripe.paymentIntents.capture(
+        paymentIntent.id
+      );
+      
+      res.json({
+        success: true,
+        paymentIntent: capturedPayment,
+        message: 'Payment captured successfully'
+      });
+    } else {
+      throw new Error(`Unexpected payment status: ${paymentIntent.status}`);
+    }
   } catch (error) {
-    console.error('Error creating payment intent:', error);
-    res.status(400).json({
-      error: error.message,
+    console.error('Payment processing error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
     });
   }
 });
