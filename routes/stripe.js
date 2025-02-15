@@ -120,16 +120,18 @@ router.post('/create-payment-intent', async (req, res) => {
   try {
     const { amount, currency } = req.body;
 
-    // Create a PaymentIntent
+    // Create a PaymentIntent specifically for card_present (NFC) payments
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency,
-      // payment_method_types: ['card'],
+      payment_method_types: ['card_present'],
       capture_method: 'automatic',
-      automatic_payment_methods: {
-        enabled: true,
-        allow_redirects: 'never'
-      }
+      payment_method_options: {
+        card_present: {
+          request_extended_authorization: false,
+          request_incremental_authorization_support: false,
+        },
+      },
     });
 
     // Return the client secret
