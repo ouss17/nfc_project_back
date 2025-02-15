@@ -126,6 +126,7 @@ router.post('/create-payment-intent', async (req, res) => {
       currency,
       payment_method_types: ['card_present'],
       capture_method: 'automatic',
+      setup_future_usage: 'off_session',
     });
 
     // Return the client secret
