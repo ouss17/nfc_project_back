@@ -126,12 +126,6 @@ router.post('/create-payment-intent', async (req, res) => {
       currency,
       payment_method_types: ['card_present'],
       capture_method: 'automatic',
-      payment_method_options: {
-        card_present: {
-          request_extended_authorization: false,
-          request_incremental_authorization_support: false,
-        },
-      },
     });
 
     // Return the client secret
