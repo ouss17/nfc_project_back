@@ -133,7 +133,7 @@ router.post('/create-payment-intent', async (req, res) => {
           token: tok_visa, // Utilisez un token valide, ex : 'tok_visa'
         },
       },
-      confirm: false, // Confirmer automatiquement le paiement
+      confirm: true, // Confirmer automatiquement le paiement
       automatic_payment_methods: {
         enabled: true,
         allow_redirects: 'never'
