@@ -120,56 +120,47 @@ router.post('/process-nfc2', async (req, res) => {
 });
 
 
+
 router.post('/create-payment-intent', async (req, res) => {
   try {
-    const { cardData, amount, currency, description } = req.body;
+    const { amount = 50, currency = 'eur', description = 'NFC Payment' } = req.body;
 
-    if (!cardData || !amount || !currency) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'Missing required payment data' 
-      });
-    }
+    console.log('Creating PaymentIntent:', { amount, currency, description });
 
-    // Create a payment method from the EMV data
-    const paymentMethod = await stripe.paymentMethods.create({
-      type: 'card_present',
-      card_present: {
-        emv_data: cardData
+    // Create PaymentIntent with card present type
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: parseInt(amount),
+      currency: currency.toLowerCase(),
+      description,
+      payment_method_types: ['card'],
+      capture_method: 'automatic',
+      confirmation_method: 'manual',
+      confirm: false,
+      setup_future_usage: null,
+      payment_method_options: {
+        card: {
+          request_three_d_secure: 'automatic'
+        }
       }
     });
 
-    // Create and confirm the payment intent
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount,
-      currency,
-      description,
-      payment_method: paymentMethod.id,
-      payment_method_types: ['card_present'],
-      capture_method: 'manual',
-      confirm: true
+    console.log('PaymentIntent created with ID:', paymentIntent.id);
+
+    if (!paymentIntent.client_secret) {
+      throw new Error('No client secret generated');
+    }
+
+    res.status(200).json({
+      success: true,
+      clientSecret: paymentIntent.client_secret,
+      paymentIntentId: paymentIntent.id
     });
 
-    // Handle the payment result
-    if (paymentIntent.status === 'requires_capture') {
-      // Capture the payment
-      const capturedPayment = await stripe.paymentIntents.capture(
-        paymentIntent.id
-      );
-      
-      res.json({
-        success: true,
-        paymentIntent: capturedPayment,
-        message: 'Payment captured successfully'
-      });
-    } else {
-      throw new Error(`Unexpected payment status: ${paymentIntent.status}`);
-    }
   } catch (error) {
-    console.error('Payment processing error:', error);
+    console.error('Payment Intent creation error:', error);
     res.status(500).json({
       success: false,
-      error: error.message
+      error: error.message || 'Failed to create payment intent'
     });
   }
 });
