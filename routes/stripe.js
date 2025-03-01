@@ -119,15 +119,13 @@ router.post('/process-nfc2', async (req, res) => {
   }
 });
 
-
-
 router.post('/create-payment-intent', async (req, res) => {
   try {
     const { amount = 50, currency = 'eur', description = 'NFC Payment' } = req.body;
 
     console.log('Creating PaymentIntent:', { amount, currency, description });
 
-    // Create PaymentIntent with card present type
+    // Create PaymentIntent without setup_future_usage
     const paymentIntent = await stripe.paymentIntents.create({
       amount: parseInt(amount),
       currency: currency.toLowerCase(),
@@ -136,7 +134,6 @@ router.post('/create-payment-intent', async (req, res) => {
       capture_method: 'automatic',
       confirmation_method: 'manual',
       confirm: false,
-      setup_future_usage: null,
       payment_method_options: {
         card: {
           request_three_d_secure: 'automatic'
