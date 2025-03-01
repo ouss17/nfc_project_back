@@ -125,15 +125,13 @@ router.post('/create-payment-intent', async (req, res) => {
 
     console.log('Creating PaymentIntent:', { amount, currency, description });
 
-    // Create PaymentIntent without setup_future_usage
     const paymentIntent = await stripe.paymentIntents.create({
       amount: parseInt(amount),
       currency: currency.toLowerCase(),
       description,
       payment_method_types: ['card'],
       capture_method: 'automatic',
-      confirmation_method: 'manual',
-      confirm: false,
+      confirmation_method: 'automatic',
       payment_method_options: {
         card: {
           request_three_d_secure: 'automatic'
@@ -142,10 +140,6 @@ router.post('/create-payment-intent', async (req, res) => {
     });
 
     console.log('PaymentIntent created with ID:', paymentIntent.id);
-
-    if (!paymentIntent.client_secret) {
-      throw new Error('No client secret generated');
-    }
 
     res.status(200).json({
       success: true,
@@ -157,7 +151,7 @@ router.post('/create-payment-intent', async (req, res) => {
     console.error('Payment Intent creation error:', error);
     res.status(500).json({
       success: false,
-      error: error.message || 'Failed to create payment intent'
+      error: error.message
     });
   }
 });
