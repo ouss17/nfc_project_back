@@ -131,10 +131,10 @@ router.post('/create-payment-intent', async (req, res) => {
       description,
       payment_method_types: ['card'],
       capture_method: 'automatic',
-      confirmation_method: 'automatic',
+      confirm: false,
       payment_method_options: {
         card: {
-          request_three_d_secure: 'automatic'
+          request_three_d_secure: 'any'
         }
       }
     });
