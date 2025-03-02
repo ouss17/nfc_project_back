@@ -129,13 +129,10 @@ router.post('/create-payment-intent', async (req, res) => {
       amount: parseInt(amount),
       currency: currency.toLowerCase(),
       description,
-      payment_method_types: ['card'],
+      payment_method_types: ['card_present'], // Changed to card_present
       capture_method: 'automatic',
-      confirm: false,
-      payment_method_options: {
-        card: {
-          request_three_d_secure: 'any'
-        }
+      payment_method_data: {
+        type: 'card_present'
       }
     });
 
@@ -149,6 +146,34 @@ router.post('/create-payment-intent', async (req, res) => {
 
   } catch (error) {
     console.error('Payment Intent creation error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// Add this new route after create-payment-intent
+router.post('/capture-payment', async (req, res) => {
+  try {
+    const { paymentIntentId } = req.body;
+
+    if (!paymentIntentId) {
+      return res.status(400).json({
+        success: false,
+        error: 'Payment Intent ID is required'
+      });
+    }
+
+    const paymentIntent = await stripe.paymentIntents.capture(paymentIntentId);
+
+    res.json({
+      success: true,
+      paymentIntent
+    });
+
+  } catch (error) {
+    console.error('Payment capture error:', error);
     res.status(500).json({
       success: false,
       error: error.message
